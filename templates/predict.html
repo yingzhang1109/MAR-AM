@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title>Your Prediction</title>
+    
+	<link rel='stylesheet' href='/static/css/predict.css' />
+</head>
+<body style="background-color:grey">
+    <canvas id="canvas2"></canvas>
+    
+    <div id="maintext">
+    <h1>{{result}}</h1>
+    <a href="{{ url_for('index') }}"><button class="button mt-3">Try again?</button></a>
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn">Feedback</button>
+    
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+    
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id ="form_feedback" action="/" method="POST" enctype="multipart/form-data">		
+			<p>
+			<label for="fb_overall" style="cursor:pointer;font-weight:bold;">Overall, do you satified MAR-AM?</label><br>
+			<select name="fb_overall" id="fb_overall">
+				<option value="yes">Yes</option>
+				<option value="no">No</option>
+			</select>
+			</p>
+			<p>
+			<label for="pred_acc1" style="cursor:pointer;font-weight:bold;">Do you agree with our prediction?</label><br>
+			<select name="pred_acc1" id="pred_acc1">
+				<option value="yes">Yes</option>
+				<option value="no">No</option>
+            </select>
+            </p>
+            <p>
+            <label for="pred_acc2" style="cursor:pointer;font-weight:bold;">Have you print it to validate our analysis?</label><br>
+			<select name="pred_acc2" id="pred_acc2">
+				<option value="yes">Yes</option>
+				<option value="no">No</option>
+            </select>
+            </p>
+            <p>
+            <label for="comment" style="cursor:pointer;font-weight:bold;"> Any comments?</label><br>
+			<textarea id="comment" name="comment" rows = "5" cols = "50"></textarea> 
+			</p>
+			<p>
+			<input type="submit" value="Submit" id= "fb_submit">
+			</p>          
+      </div>
+    
+    </div>
+   
+    </div>
+    <script>
+        let name ='{{filename}}';
+    </script>   
+    <script src="/static/js/three.js"></script>
+	<script src="/static/js/STLLoader.js"></script>
+	<script src="/static/js/Detector.js"></script>
+	<script src="/static/js/OrbitControls.js"></script>
+    <script src="/static/js/resultLoader.js"></script>     
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    </script>
+</body>
+</html> 

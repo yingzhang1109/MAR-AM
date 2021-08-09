@@ -1,0 +1,157 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  font-size: 16pt;
+}
+H2{
+	font-size: 16pt;
+	margin-left: 5%;
+}
+#title{
+	margin: auto;
+	width:90%;
+	font-size: 14pt;
+}
+#left_panel{
+    width: 40%;
+    height: 100%;
+	position: absolute;        
+    background-color: #DCDCDC;
+    bottom: 0;
+    top: 0;
+    left: 0;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+#submit_panel{
+	position: relative;
+    height: 20%;      
+	top: 10%;
+    left: 0;
+}
+#form{
+	height:60%;	
+
+}
+#deisgn{
+	height:20%;
+	position: absolute;
+	top:70%;
+	background-color: black;
+}
+#process{
+	margin-left: 10%;
+	margin-top: -1%;
+	margin-bottom: -4%;
+	width: 70%;
+	font-size: 12pt;
+	display: grid;
+	grid-template:
+	'myArea myArea'
+	'myArea myArea';
+	grid-gap: 0px;
+	padding: 0px;
+}
+#item1 {
+  grid-area: myArea;
+}
+
+#step1{
+	margin: auto;
+	width:90%;
+	font-size: 14pt;
+}
+#canvas1{
+	width: 60%;
+    height: 80%;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+#bottom_panel{
+	width:60%;
+	height: 20%;
+	position: absolute;
+	background-color: #DCDCDC;
+	bottom: 0;
+	right: 0;
+}
+#load_button{
+	position:absolute;
+	left:10%;
+	font-size: 12pt;
+}
+#remove_button{
+	position:absolute;
+	left:50%;
+}
+#submit_button{
+	position: relative;
+	left:20%;
+
+}
+#stl_file, #modelPlusTexture{
+    display: none;
+}
+.model_upload, #remove {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer; 
+    color: #fff;
+    background: #4B5F83;
+	right: 150px;
+}
+
+.model_upload:hover{
+     background: #009999;
+}
+
+#remove {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer; 
+	font-size: 12pt;
+    background: #b90a0a;
+}
+#remove:hover{
+    background: #e23636;
+}
+#submit{
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer; 
+	color: #fff;
+	font-size: 14pt;
+    background: black;
+}
+#submit:hover{
+    background: #a0a0a0;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; /* Could be more or less, depending on screen size */
+  height: 30%;
+  text-align:center; 
+}

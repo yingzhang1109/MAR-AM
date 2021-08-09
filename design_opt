@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
+from tweaker3 import FileHandler
+from tweaker3 import Tweaker
+
+file_handler = FileHandler.FileHandler()
+
+objs = file_handler.load_mesh('37880xRotate90.stl')
+info = dict()
+
+for part, content in objs.items():
+    info[part] = dict()
+    mesh = content["mesh"]
+    kwargs = dict({"min_volume":False})
+    x = Tweaker.Tweak(mesh, **kwargs)
+    info[part]["matrix"] = x.matrix
+    info[part]["tweaker_stats"] = x
+    
+file_handler.write_mesh(objs, info, '3.stl')
+

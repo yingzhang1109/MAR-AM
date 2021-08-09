@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>MAR-AM</title>
+		<style>
+			body { margin: 0; }
+		</style>
+		<script src="/static/js/three.js"></script>
+		<script src="/static/js/Detector.js"></script>
+		<script src="/static/js/STLLoader.js"></script>
+		<script src="/static/js/OrbitControls.js"></script>
+
+		<link rel='stylesheet' href='/static/css/main_style.css' />
+	</head>
+	<body>
+    	<div id="bottom_panel">	
+			<label id = "analyzing_message"> hahahhaha</label>
+        </div>
+		<div id="left_panel">
+			<div id = "title">
+				<H1>Manufacturability Analyzer and Recommender for Additive Manufacturing (MAR-AM)</H1>
+			</div>
+			<form id ="form" action="/" method="POST" enctype="multipart/form-data">
+				<H2>Step1: Enter your process and material information </H2>
+				<div id ="process">
+					<p id="item1">
+					<label for="am_type" style="cursor:pointer;font-weight:bold;">Type of AM technology:</label><br>
+					<select name="Am_type" id="am_type">
+						<option value="FDM">Fused filament fabrication</option>
+						<option value="LPBF">Selective laser melting</option>
+					</select>
+					</p>
+					<p id="item2">
+					<label for="machine_brand" style="cursor:pointer;font-weight:bold;">Machine Brand:</label><br>
+					<select name="Machine_brand" id="machine_brand">
+						<option value="Ultimaker">Ultimaker</option>
+						<option value="Other_machine_brand">Others</option>
+					</select>
+					</p>
+					<p id="item3">
+					<label for="machine_type" style="cursor:pointer;font-weight:bold;">Machine Serie:</label><br>
+					<select name="Machine_type" id="machine_type">
+						<option value="ultimaker3">Ultimaker 3</option>
+						<option value="other_machine_type">Others</option>
+					</select>
+					</p>
+					<p id="item4">
+					<label for="material_type" style="cursor:pointer;font-weight:bold;">Material Type:</label><br>
+					<select name="Type" id="material_type">
+						<option value="PLA">PLA</option>
+						<option value="ABS">ABS</option>
+						<option value="PC">PC</option>
+						<option value="NYLON">NYLON</option>
+						<option value="Other_material_type">Others</option>
+					</select>
+					</p>
+					<p id="item5">
+					<label for="material_density" style="cursor:pointer;font-weight:bold;">Material Density (g/cm^3):</label><br>
+					<input type="number" name="Density" id="material_density" step="0.01">
+					</p>
+					<p id="item6">
+					<label for="layer_thickness" style="cursor:pointer;font-weight:bold;">Layer Thickness (mm):</label><br>
+					<input type="number" name="LayerThinkness" id="layer_thickness" step="0.01" max="1">
+					</p>
+					<p id="item7">
+					<label for="infill_percent" style="cursor:pointer;font-weight:bold;">Infill Percent (%):</label><br>
+					<input type="number" name="InfillPercent" id="infill_percent">
+					</p>
+					<p id="item8">
+					<label for="printing_speed" style="cursor:pointer;font-weight:bold;">Printing Speed (mm/s):</label><br>
+					<input type="number" name="PrintingSpeed" id="printing_speed">
+					</p>
+					<p id="item9">
+					<label for="adhension" style="cursor:pointer;font-weight:bold;">Adhension Type:</label><br>
+					<select name="AdhensionType" id="adhension">
+						<option value="Brim">Brim</option>
+						<option value="Raft_0.25">Raft with gap of 0.25mm</option>
+						<option value="Raft_0.15">Raft with gap of 0.15mm</option>
+						<option value="Raft_0.05">Raft with gap of 0.05mm</option>
+						<option value="None">None</option>
+					</select>
+					</p>
+					<p id="item10">
+					<label for="nozzle_temp" style="cursor:pointer;font-weight:bold;">Nozzle Temperature (°C):</label><br>
+					<input type="number" name="NozzleTemp" id="nozzle_temp">
+					</p>
+					<p id="item11">
+					<label for="bed_temp" style="cursor:pointer;font-weight:bold;">Bed Temperature (°C):</label><br>
+					<input type="number" name="BedTemp" id="bed_temp">
+					</p>
+					<p>
+				</div>
+				<H2>Step2: Load your STL model (it should include your support) </H2>
+	
+				<div id = "load_button">
+				
+					<label for="stl_file" class="model_upload">Load Model</label>
+					<input type="file" name ="stl_file" id = "stl_file">
+				</div>
+				<div id = "remove_button">
+					<button type="button" id="remove"> Remove file</button>
+				</div>
+				<div id = "submit_panel">
+					<H2>You are all set! Please submit to see the results.</H2>
+					<div id = "submit_button">
+						<input type="submit" value="Submit" id= "submit">
+					</div>
+					
+					<div id="analyzingModal" class="modal">
+    
+                      <!-- Modal content -->
+                      <div class="modal-content">
+                        <p>^_^ We are analyzing....</p>
+                        <p>Please be patient. It will take less than 1 minute.</p>
+                        <img src="/static/download.png" alt="loading">
+                      </div>
+                    
+                    </div>
+					
+				</div>	
+			</form>
+        </div>
+		
+		<div id="bottom_panel">	
+			<label id = "analyzing_message"> </label>
+        </div>
+        
+		
+		<canvas id="canvas1"></canvas>
+		
+		<script src="/static/js/handLoader.js"></script>  
+		<script src="/static/js/userModels.js"></script>
+		<script src="/static/js/form.js"></script>
+        <script>
+            // Get the modal
+            var modal = document.getElementById("analyzingModal");
+            
+            // Get the button that opens the modal
+            var btn = document.getElementById("submit");
+            
+            
+            // When the user clicks on the button, open the modal
+            btn.onclick = function() {
+              modal.style.display = "block";
+            }
+            
+        </script>
+	</body>
+</html>

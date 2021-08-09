@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug  9 11:36:21 2021
+
+@author: ying
+"""
+
+from recommender import recommender
+from main_functions import make_prediction
+
+filename = 'OrganizadorHexagonal.stl'
+process_filename = filename.rsplit('.', 1)[0] + '.json'
+predictions = make_prediction(filename,process_filename)
+if predictions ==1:
+    result = 'congratulations! You part is ready to print'
+else:
+    result = 'You part need some modifications before you print it'
+    recommender(filename,process_filename)
