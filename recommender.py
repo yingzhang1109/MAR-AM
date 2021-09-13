@@ -9,12 +9,16 @@ Created on Mon May 17 08:19:20 2021
 import pandas as pd
 import numpy as np
 import trimesh
-import json
 from ml_prediction import ml_prediction
 from main_functions import process_data_generation
+from tweaker3 import FileHandler
+from tweaker3 import Tweaker
+import math
+import os
+
 #dataset = pd.read_pickle('sparse_FDM_v2.pickle')
 #data = dataset.head(1)
-
+path = 'static/saved/'
 def get_coords(data):
     coords = []
     truth =[]
@@ -85,7 +89,7 @@ def feedback_process(process_data,design_data):
         printing_speed_variation = np.linspace(40,100,7).T
         #try default value with prediction first
         if ((process_data!=pla_default).all()).all():
-            print('try default settings')
+            print('Recommendations: Try default settings')
             data_try = pd.concat([pla_default, design_data],axis=1)
             pred_class_try,pred_try = ml_prediction(data_try)
         
@@ -94,7 +98,7 @@ def feedback_process(process_data,design_data):
         nozzle_temp_variation = np.linspace(210,250, 9).T
         printing_speed_variation = np.linspace(40,80,5).T
         if ((process_data!=abs_default).all()).all():
-            print('try default settings')
+            print('Recommendations: Try default settings')
             data_try = pd.concat([abs_default, design_data],axis=1)
             pred_class_try,pred_try = ml_prediction(data_try)
         
@@ -103,7 +107,7 @@ def feedback_process(process_data,design_data):
         nozzle_temp_variation = np.linspace(260,290, 7).T
         printing_speed_variation = np.linspace(30,70,5).T
         if ((process_data!=pc_default).all()).all():
-            print('try default settings')
+            print('Recommendations: Try default settings')
             data_try = pd.concat([pc_default, design_data],axis=1)
             pred_class_try,pred_try = ml_prediction(data_try)
         
@@ -112,7 +116,7 @@ def feedback_process(process_data,design_data):
         nozzle_temp_variation = np.linspace(240,260, 5).T
         printing_speed_variation = np.linspace(40,90,6).T
         if ((process_data!=nylon_default).all()).all():
-            print('try default settings')
+            print('Recommendations: Try default settings')
             data_try = pd.concat([nylon_default, design_data],axis=1)
             pred_class_try,pred_try = ml_prediction(data_try)
         
@@ -128,7 +132,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return 'try to change bed temperature to ' + target['BedTemp']
+            return 'Recommendations: Try to change bed temperature to ' + target['BedTemp']
     #try nozzle temp
     N = len(nozzle_temp_variation)   
     nozzle_temp_data = pd.concat([data]*N, ignore_index=True)
@@ -141,7 +145,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return 'try to change nozzle temperature to' + target['NozzleTemp']
+            return 'Recommendations: Try to change nozzle temperature to' + target['NozzleTemp']
     #try adhesion type
     N = len(adh_type_variation)   
     adh_type_data = pd.concat([data]*N, ignore_index=True)
@@ -154,7 +158,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return 'try to change adhesion type to' +target['AdhensionType']
+            return 'Recommendations: Try to change adhesion type to' +target['AdhensionType']
     #try printing speed
     N = len(printing_speed_variation)   
     printing_speed_data = pd.concat([data]*N, ignore_index=True)
@@ -167,7 +171,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return 'try to change printing speed to ' + target
+            return 'Recommendations: Try to change printing speed to ' + target['PrintingSpeed']
     #try infill percent
     N = len(infill_percent_variation)   
     infill_percent_data = pd.concat([data]*N, ignore_index=True)
@@ -181,7 +185,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try to change infill percentage' + target['InfillPercent']
     #try layer thickness
     N = len(layer_thickness_varation)   
     layer_thickness_data = pd.concat([data]*N, ignore_index=True)
@@ -194,7 +198,7 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try to change layer thickness' + target['LayerThinkness']
     #try material type
     print('analyzing material type')
     if process_data['Type'].iloc[0] == 'PLA':
@@ -203,76 +207,76 @@ def feedback_process(process_data,design_data):
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try ABS'
         data_try = pd.concat([pc_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PC'
         data_try = pd.concat([nylon_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try NYLON'
     if process_data['Type'].iloc[0] == 'ABS':
         data_try = pd.concat([pla_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PLA'
         data_try = pd.concat([pc_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PC'
         data_try = pd.concat([nylon_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try NYLON'
     if process_data['Type'].iloc[0] == 'PC':
         data_try = pd.concat([abs_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try ABS'
         data_try = pd.concat([pla_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PLA'
         data_try = pd.concat([nylon_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try NYLON'
     if process_data['Type'].iloc[0] == 'NYLON':
         data_try = pd.concat([abs_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try ABS'
         data_try = pd.concat([pc_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PC'
         data_try = pd.concat([pla_default, design_data],axis=1)
         pred_class_try,pred_try = ml_prediction(data_try)
         if pred_class_try.numpy()==1:
             target = data_try
             print('find')
-            return target
+            return 'Recommendations: Try PLA'
     #if none of them is working
     return False
  
@@ -281,7 +285,61 @@ def feedback_process(process_data,design_data):
 # process_filename = design_filename.rsplit('.', 1)[0] + '.json'
 # =============================================================================
 
+def design_opt_min_sur(design_filename):
+    path,filename = os.path.split(design_filename)
+    file_handler = FileHandler.FileHandler()
+
+    objs = file_handler.load_mesh(design_filename)
+    info = dict()
+    output_filename = 'min_sur_' + filename
+    for part, content in objs.items():
+        info[part] = dict()
+        mesh = content["mesh"]
+        kwargs = dict({"min_volume":False})
+        x = Tweaker.Tweak(mesh, **kwargs)
+        info[part]["matrix"] = x.matrix
+        info[part]["tweaker_stats"] = x
+        
+    file_handler.write_mesh(objs, info, path+'/'+output_filename)
+    
+    
+    return output_filename
+
+def design_opt_most_contact(design_filename):
+    path,filename = os.path.split(design_filename)
+    output_filename = 'most_contact_' + filename
+    mesh = trimesh.load(design_filename)    
+    scale = np.max(mesh.extents)
+    voxelized_mesh = mesh.voxelized(scale/64)
+    
+    obj = voxelized_mesh.matrix
+    a = [sum(sum(obj[0,:,:])),sum(sum(obj[-1,:,:])),sum(sum(obj[:,0,:])),
+               sum(sum(obj[:,-1,:])),sum(sum(obj[:,:,0])),sum(sum(obj[:,:,-1]))]
+    
+    new = a.index(max(a))
+    angle = [-math.pi/2,math.pi/2,math.pi/2,-math.pi/2,0,math.pi]
+    direction = [[0,1,0],[0,1,0],[1,0,0],[1,0,0],[1,0,0],[1,0,0]]
+    rot = trimesh.transformations.rotation_matrix(angle[new],direction[new],[0,0,0])
+    new_mesh = mesh.apply_transform(rot)
+    new_mesh.export(path+'/'+output_filename)  
+    return output_filename
+
+def feedback_design(design_filename, process_data):
+    coords,feats,scale,obj = design_data_generation(design_filename)
+    design_data = pd.DataFrame()
+    design_data['coords'] = [coords]
+    design_data['feats'] = [feats]
+    design_data['scale'] = [scale]
+    data_try = pd.concat([process_data,design_data],axis=1)
+    pred_class_try,pred_try = ml_prediction(data_try)
+    if pred_class_try.numpy()==1:
+        print('find')
+        return 'Recommendations: Try different build orientation as the viewer shows'
+    else:
+        return False
+
 def recommender(design_filename,process_filename):
+    path,filename = os.path.split(design_filename)
     coords,feats,scale,obj = design_data_generation(design_filename)
     process_data = process_data_generation(process_filename)
     design_data = pd.DataFrame()
@@ -289,22 +347,29 @@ def recommender(design_filename,process_filename):
     design_data['feats'] = [feats]
     design_data['scale'] = [scale]
     #data = pd.concat([process_data,design_data],axis=1)
-    #pred_class,pred = ml_prediction(data)
-    
+    #pred_class,pred = ml_prediction(data)  
+    most_contact_filename = design_opt_most_contact(design_filename)
+    design_suggestion_most_contact = feedback_design(path+'/'+most_contact_filename,process_data)
     #process variation
-    print('part is not printable')
+    if design_suggestion_most_contact != False:
+        return design_suggestion_most_contact,most_contact_filename
+    
+    
+    min_sur_filename = design_opt_min_sur(design_filename)
+    design_suggestion_min_sur = feedback_design(path+'/'+min_sur_filename,process_data)
+    #process variation
+    if design_suggestion_min_sur != False:
+        return design_suggestion_min_sur,min_sur_filename
+    
+    
     #try process variation
-    suggestion = feedback_process(process_data,design_data)
+    process_suggestion = feedback_process(process_data,design_data)
+    if process_suggestion !=False:
+        return process_suggestion,design_filename
     #if not, try design variation
     #two strategy: 1, most contacting face 2, least overhang
     #rotate for placing other five faces to platform
     #if suggestion == False:
-            
-        
-    
-        
-    
-    
     
     # =====================================
     # #3d plot in python
@@ -326,4 +391,4 @@ def recommender(design_filename,process_filename):
     # =============================================================================
         
     #test1.obj --> not printable
-    return suggestion
+    return 'Please see the printability map for potential design modification', design_filename
