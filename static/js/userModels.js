@@ -61,9 +61,12 @@ var loadFile = function (file) {
 
                 model.geometry.computeBoundingBox();
                 size = model.geometry.boundingBox;
-                trans = -size.min.z/5;
-
-                model.position.set(0, 0, trans);
+                trans_z = -size.min.z/5;
+                console.log(size.max.x+size.min.x)
+                console.log(size.max.y+size.min.y)
+                trans_x = -(size.max.x+size.min.x)/10;
+                trans_y = -(size.max.y+size.min.y)/10;
+                model.position.set(trans_x, trans_y, trans_z);
 
 				model.rotation.set( 0, 0, 0 );
 				model.scale.set( 0.2, 0.2, 0.2 );

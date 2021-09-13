@@ -1,7 +1,7 @@
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var camera, scene, renderer;
-console.log(name)
+var trans_z, trans_y, trans_x;
 init();
 
 function init() {
@@ -35,13 +35,20 @@ function init() {
 
   // Binary files
 
-  var material = new THREE.MeshPhongMaterial( { color: 0x0e2045, specular: 0x111111, shininess: 200 } );
-  loader.load( '../static/saved/'+name, function ( geometry ) {
+  
+  
+  console.log(name)
+  loader.load('../static/saved/'+name, function ( geometry ) {
+    var material = new THREE.MeshPhongMaterial( { color: 0x0e2045, specular: 0x111111, shininess: 200 } );
     var mesh = new THREE.Mesh( geometry, material );
     mesh.geometry.computeBoundingBox();
     size = mesh.geometry.boundingBox;
-    trans = -size.min.z/5;
-    mesh.position.set( 0, 0, trans );
+    trans_z = -size.min.z/5;
+    console.log(size.max.x+size.min.x)
+    console.log(size.max.y+size.min.y)
+    trans_x = -(size.max.x+size.min.x)/10;
+    trans_y = -(size.max.y+size.min.y)/10;
+    mesh.position.set( trans_x, trans_y, trans_z );
     mesh.rotation.set( 0, 0, 0 );
     mesh.scale.set( .2, .2, .2 );
 
@@ -49,8 +56,31 @@ function init() {
     mesh.receiveShadow = true;
 
     scene.add( mesh );
+    //render();
+  });
+  
+  
+  loader.load( '../static/saved/try.stl', function ( geometry ) {
+    var material = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0x111111, shininess: 200 } );
+    var mesh = new THREE.Mesh( geometry, material );
+    mesh.geometry.computeBoundingBox();
+    size = mesh.geometry.boundingBox;
+    trans_z = -size.min.z*0.238;
+    //console.log(size.max.x+size.min.x)
+    //console.log(size.max.y+size.min.y)
+    trans_x = -(size.max.x+size.min.x)*0.119;
+    trans_y = -(size.max.y+size.min.y)*0.119;
+    mesh.position.set( trans_x, trans_y, trans_z );
+    mesh.rotation.set( 0, 0, 0 );
+    mesh.scale.set( .238, .238, .238 );
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    scene.add( mesh );
     render();
   });
+  
 
   var controls = new THREE.OrbitControls( camera, renderer.domElement );
   controls.addEventListener( 'change', render );

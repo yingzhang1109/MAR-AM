@@ -3,11 +3,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var camera, scene, renderer;
 const manager = new THREE.LoadingManager();
 init();
-
+  
 function init() {
   scene = new THREE.Scene()
-  scene.add( new THREE.AmbientLight( 0x999999 ) );
-
+  scene.add( new THREE.AmbientLight( 0x999999) );
+  
+  
   camera = new THREE.PerspectiveCamera( 70, 0.75*window.innerWidth / window.innerHeight, 0.1, 500000);
 
   // Z is up for objects intended to be 3D printed.
@@ -55,3 +56,4 @@ function render() {
   renderer.render( scene, camera );
 
 }
+
