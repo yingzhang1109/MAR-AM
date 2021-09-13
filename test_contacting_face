@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Aug 11 15:20:56 2021
+
+@author: ying
+"""
+
+import numpy as np
+from main_functions import design_data_generation
+import trimesh
+import math
+
+mesh = trimesh.load('37880xRotate90.stl')    
+scale = np.max(mesh.extents)
+voxelized_mesh = mesh.voxelized(scale/128)
+
+obj = voxelized_mesh.matrix
+a = [sum(sum(obj[0,:,:])),sum(sum(obj[-1,:,:])),sum(sum(obj[:,0,:])),
+           sum(sum(obj[:,-1,:])),sum(sum(obj[:,:,0])),sum(sum(obj[:,:,-1]))]
+
+new = a.index(max(a))
+angle = [-math.pi/2,math.pi/2,math.pi/2,-math.pi/2,0,math.pi]
+direction = [[0,1,0],[0,1,0],[1,0,0],[1,0,0],[1,0,0],[1,0,0]]
+rot = trimesh.transformations.rotation_matrix(angle[new],direction[new],[0,0,0])
+new_mesh = mesh.apply_transform(rot)
+new_mesh.export('try.stl')
